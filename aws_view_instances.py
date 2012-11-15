@@ -1,11 +1,13 @@
+#!/usr/bin/python
 # aws_view_instances
 #
 # Author: E. van Nuil / Oblivion b.v.
 # Project: Informa / Euroforum AWS
 #
-# Version 0.3
-#   
-#   12-09-2012: 0.3
+# Version 0.4
+#
+#   15-11-2012: 0.4 Adding Volume totals
+#   12-09-2012: 0.3 Added Datatable (http://datatables.net)
 #   11-09-2012: 0.2 Getting data and formatting
 #   11-09-2012: 0.1 Initial setup, templating system
 #
@@ -108,14 +110,20 @@ for r in reservations:
         buf += "<i class=\"icon-hdd\"></i> "
         buf += "<span class=\"caret\"></span></a>"
         buf += "<ul class=\"dropdown-menu\">"
+        totalvolumesize = 0
         for v in ec2.get_all_volumes(filters={'attachment.instance-id': i.id}):
             buf += "<li><a href=\"#" + v.id + "\">"
             buf += v.id + " (" + unicode(v.size) + "GB)"
+            totalvolumesize += v.size
             buf += "</a></li>"
         buf +=  "</ul></div></td>"
+        buf += "<td>" + unicode(totalvolumesize) + " GB</td>"
         buf += "</tr>\n"
 buf += "</tbody>\n"
 buf += "</table>"
-
+totalvolumesizes = 0
+for v in ec2.get_all_volumes():
+    totalvolumesizes += v.size
+buf += "<br/><hr>Total volume sizes: <b>" + unicode(totalvolumesizes) + " GB</b>"
 # TODO: write to file with date in the file name to a S3 bucket.
 print mytemplate.render(date=today,data=buf)
