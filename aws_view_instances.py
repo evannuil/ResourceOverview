@@ -117,7 +117,7 @@ for r in reservations:
             totalvolumesize += v.size
             buf += "</a></li>"
         buf +=  "</ul></div></td>"
-        buf += "<td>" + unicode(totalvolumesize) + " GB</td>"
+        buf += "<td>" + unicode(totalvolumesize) + "</td>"
         buf += "</tr>\n"
 buf += "</tbody>\n"
 buf += "</table>"

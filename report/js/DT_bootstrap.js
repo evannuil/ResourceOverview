@@ -152,6 +152,28 @@ $(document).ready(function() {
 		"sPaginationType": "bootstrap",
 		"oLanguage": {
 			"sLengthMenu": "_MENU_ records per page"
-		}
-	} );
+		},
+		    "fnFooterCallback": function ( nRow, aaData, iStart, iEnd, aiDisplay ) {
+            /*
+             * Calculate the total market share for all browsers in this table (ie inc. outside
+             * the pagination)
+             */
+            var iTotalVolume = 0;
+            for ( var i=0 ; i<aaData.length ; i++ )
+            {
+                iTotalVolume += aaData[i][9]*1;
+            }
+             
+            /* Calculate the market share for browsers on this page */
+            var iPageVolume = 0;
+            for ( var i=iStart ; i<iEnd ; i++ )
+            {
+                iPageVolume += aaData[ aiDisplay[i] ][9]*1;
+            }
+             
+            /* Modify the footer row to match what we want */
+            var nCells = nRow.getElementsByTagName('th');
+            nCells[1].innerHTML = parseInt(iPageVolume) +
+                ' GB ( '+ parseInt(iTotalVolume) +' GB total)';
+	}} );
 } );
