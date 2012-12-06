@@ -34,7 +34,14 @@ import boto
 import boto.ec2
 
 # TODO: Use proxy functions
-ec2 = boto.connect_ec2()
+proxyHost = '10.100.128.11'
+proxyPort = '8080'
+
+if proxyHost == '':
+    ec2 = boto.connect_ec2()
+else:
+    ec2 = boto.connect_ec2(proxy=proxyHost, proxy_port=proxyPort)
+
 reservations = ec2.get_all_instances()
 
 # Get all instances
