@@ -28,6 +28,8 @@
 
 from mako.template import Template
 from datetime import date
+import datetime
+import os
 import boto
 import boto.ec2
 
@@ -40,6 +42,9 @@ instance = reservations[0].instances[0]
 
 # Get the HTML template
 mytemplate = Template(filename='report/report.html')
+
+# Get the date
+now = datetime.datetime.now()
 
 # Create the text buffer which is passed to the Mako render function
 buf = ""
@@ -126,4 +131,16 @@ for v in ec2.get_all_volumes():
     totalvolumesizes += v.size
 buf += "<br/><hr>Total volume sizes: <b>" + unicode(totalvolumesizes) + " GB</b>"
 # TODO: write to file with date in the file name to a S3 bucket.
-print mytemplate.render(date=today,data=buf)
+output = mytemplate.render(date=today,data=buf)
+
+# Write mode creates a new file or overwrites the existing content of the file.
+# Write mode will _always_ destroy the existing contents of a file.
+try:
+    # This will create a new file or **overwrite an existing file**.
+    f = open(("report/%s_report.html" % (today)), "w")
+    try:
+        f.writelines(output)  # Write a sequence of strings to a file
+    finally:
+        f.close()
+except IOError:
+    pass
