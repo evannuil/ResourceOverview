@@ -151,3 +151,13 @@ try:
         f.close()
 except IOError:
     pass
+
+try:
+    # This will create a new file or **overwrite an existing file**.
+    f = open("report/index.html", "w")
+    try:
+        f.writelines(output)  # Write a sequence of strings to a file
+    finally:
+        f.close()
+except IOError:
+    pass
