@@ -34,8 +34,8 @@ import boto
 import boto.ec2
 
 # TODO: Use proxy functions
-proxyHost = '10.100.128.11'
-proxyPort = '8080'
+proxyHost = ''
+proxyPort = ''
 
 if proxyHost == '':
     ec2 = boto.connect_ec2()
